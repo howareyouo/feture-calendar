@@ -6,6 +6,7 @@
   background-color: #fff;
   box-shadow: 0 4px 22px 0 rgba(#10989E, 0.05);
   padding-top: 2.5rem;
+  display: block;
   width: 100%;
 }
 

@@ -1,27 +1,46 @@
 // var monthes = ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+function createElement (tag, clazz, html) {
+  var el = document.createElement(tag)
+  if (clazz) {
+    el.className = clazz
+  }
+  if (html) {
+    el.innerHTML = html
+  }
+  return el
+}
+
 function FetureCalendar (el, options) {
-  this.body = document.querySelector('.fc-body')
   this.today = new Date()
   this.date = new Date()
+  this.date.setDate(1)
   this.options = Object.assign({
+    i18n: {
+      weeks: ['日', '一', '二', '三', '四', '五', '六']
+    },
     onSelect: function (date) {
       console.log(date)
     }
   }, options)
-  this.date.setDate(1)
   el.classList.add('fc')
+  var weeks = this.options.i18n.weeks
+  var week = createElement('div', 'fc-week')
+  for (var i in weeks) {
+    week.appendChild(createElement('span', null, weeks[i]))
+  }
+  this.body = createElement('div', 'fc-body')
+  el.appendChild(week)
+  el.appendChild(this.body)
   this.appendMonths(3)
   this.attachListeners()
 }
+
 FetureCalendar.prototype.appendMonths = function (n) {
   var date = this.date
   while (n--) {
     var current = date.getMonth()
-    var month = document.createElement('div')
-    var days = document.createElement('div')
-    month.innerHTML = date.getFullYear() + '年' + (date.getMonth() + 1) + '月'
-    month.className = 'fc-month'
-    days.className = 'fc-days'
+    var month = createElement('div', 'fc-month', date.getFullYear() + '年' + (date.getMonth() + 1) + '月')
+    var days = createElement('div', 'fc-days')
     this.body.appendChild(month)
     while (date.getMonth() === current) {
       this.appendDays(date.getDate(), date.getDay(), days)
