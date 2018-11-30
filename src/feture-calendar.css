@@ -1,7 +1,6 @@
 .fc *, .fc *:before, .fc *:after {
   box-sizing: border-box
 }
-
 .fc {
   background-color: #fff;
   box-shadow: 0 4px 22px 0 rgba(#10989E, 0.05);
@@ -9,7 +8,6 @@
   display: block;
   width: 100%;
 }
-
 .fc-btn {
   user-select: none;
   text-align: center;
@@ -21,16 +19,13 @@
   cursor: pointer;
   font: inherit;
 }
-
 .fc-btn:active {
   box-shadow: 0 0 0 2px rgba(#10989E, 0.1)
 }
-
 .fc-month {
   padding: 1rem 0;
   text-align: center;
 }
-
 .fc-week {
   display: flex;
   background-color: #EAEDF2;
@@ -72,4 +67,12 @@
 .fc-day-disabled {
   cursor: not-allowed;
   color: #B1B7BF;
+}
+.fc-range-from {
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+}
+.fc-range-to {
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
 }
