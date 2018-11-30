@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+  <meta content="IE=edge" http-equiv="X-UA-Compatible">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <meta content="Chrissy Collins" name="author">
+  <meta content="A pure vanilla JS calendar by @chrisssycollins" name="description">
+  <link href="src/feture-calendar.css" rel="stylesheet">
+  <title>Vanilla JS Calendar</title>
+  <style>
+  html {
+    box-sizing: border-box;
+    font-size: 14px;
+  }
+  * {margin: 0; padding: 0}
+
+  body {
+    -webkit-font-smoothing: antialiased;
+    font-family: -apple-system, 'PingFang SC', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #333;
+    margin: 0;
+  }
+
+  .demo-picked {
+    font-size: 1.2rem;
+    text-align: center;
+  }
+  .demo-picked span {
+    font-weight: bold;
+  }
+  </style>
+</head>
+
+<body>
+
+<div id="vcal">
+  <div class="fc-week">
+    <span>日</span>
+    <span>一</span>
+    <span>二</span>
+    <span>三</span>
+    <span>四</span>
+    <span>五</span>
+    <span>六</span>
+  </div>
+  <div class="fc-body" data-area="month"></div>
+</div>
+
+<p class="demo-picked">
+  <span data-label="picked"></span>
+</p>
+
+<script src="src/feture-calendar.js"></script>
+<script>
+window.addEventListener('load', function () {
+  new FetureCalendar(document.getElementById('vcal'), {
+    disablePast: true
+  })
+})
+</script>
+</body>
+</html>

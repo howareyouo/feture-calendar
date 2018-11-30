@@ -1,0 +1,76 @@
+.fc *, .fc *:before, .fc *:after {
+  box-sizing: border-box
+}
+
+.fc {
+  background-color: #fff;
+  box-shadow: 0 4px 22px 0 rgba(#10989E, 0.05);
+  padding-top: 2.5rem;
+  width: 100%;
+}
+
+.fc-btn {
+  user-select: none;
+  text-align: center;
+  background: none;
+  min-width: 27px;
+  outline: none;
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+.fc-btn:active {
+  box-shadow: 0 0 0 2px rgba(#10989E, 0.1)
+}
+
+.fc-month {
+  padding: 1rem 0;
+  text-align: center;
+}
+
+.fc-week {
+  display: flex;
+  background-color: #EAEDF2;
+  font-weight: bold;
+  height: 2.5rem;
+  width: 100%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+}
+.fc-week span, .fc-day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  flex: 0 0 14.2857%;
+  max-width: 14.2857%;
+}
+
+.fc-day {
+  background-color: #fff;
+  text-align: center;
+  font-style: normal;
+  padding: 1rem 0;
+  cursor: pointer;
+}
+.fc-body, .fc-body section {
+  display: flex;
+  flex-direction: column;
+}
+.fc-days {
+  display: flex;
+  flex-wrap: wrap;
+}
+.fc-day-selected {
+  background-color: #2165FF;
+  border-radius: .5rem;
+  color: #fff;
+}
+.fc-day-disabled {
+  border-radius: 0;
+  cursor: not-allowed;
+  color: #B1B7BF;
+}
