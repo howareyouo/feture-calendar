@@ -11,8 +11,9 @@
   'use strict'
 
   var defaults = {
-    months: 3,
+    months: 2,
     range: ['入住', '离店'],
+    unit: '晚',
     i18n: {
       months: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
       weeks: ['日', '一', '二', '三', '四', '五', '六'],
@@ -57,7 +58,7 @@
   }
 
   function appendDays (when, now, options, container) {
-    var disabled = options.disablePast && when.getTime() <= now.getTime() - 1,
+    var disabled = options.disablePast && when.getTime() - now.getTime() < 0,
         today    = when.toDateString() === now.toDateString(),
         weekday  = when.getDay(),
         day      = when.getDate()
@@ -82,21 +83,50 @@
     })
   }
 
-  function rangeSelect (tar, range, elems, ctx) {
-    if (elems.length < 2) {
-      tar.classList.add('fc-day-selected')
-      elems.push(tar)
-      if (elems.length == 2) {
-        elems.sort(function (a, b) {
-          return a.time - b.time
-        })
-        elems[0].classList.add('fc-range-from')
-        elems[1].classList.add('fc-range-to')
-      }
+  function setRangeText (el, html, from) {
+    var textEl = el.querySelector('i')
+    if (textEl == null) {
+      textEl = createElement('i', from ? 'fc-day-from' : 'fc-day-to', html)
+      el.appendChild(textEl)
     } else {
-      singleSelect(tar, elems, ctx)
+      textEl.innerHTML = html
     }
-    console.log(elems)
+  }
+
+  function toggleRangeClass (elems, clazz) {
+    var next = elems[0].nextElementSibling
+    while (next != null && next != elems[1]) {
+      if (!next.classList.contains('fc-month')) {
+        next.classList.toggle('fc-range')
+      }
+      next = next.nextElementSibling
+    }
+  }
+
+  function rangeSelect (tar, range, elems, ctx) {
+    if (elems.length >= 2) {
+      toggleRangeClass(elems, 'fc-range')
+      elems.forEach(function (e) {
+        e.removeChild(e.querySelector('i'))
+        e.classList.remove('fc-day-selected')
+        e.classList.remove('fc-range-from')
+        e.classList.remove('fc-range-to')
+      })
+      elems.length = 0
+    }
+    elems.push(tar)
+    tar.classList.add('fc-day-selected')
+    if (elems.length == 1) {
+      setRangeText(tar, range[0], true)
+    } else {
+      elems.sort(function (a, b) { return a.time - b.time })
+      setRangeText(elems[0], range[0], true)
+      setRangeText(elems[1], range[1])
+      toggleRangeClass(elems, 'fc-range')
+      elems[1].classList.add('fc-range-to')
+      elems[0].classList.add('fc-range-from')
+      elems[1].classList.add('fc-range-to')
+    }
   }
 
   function singleSelect (tar, elems, ctx) {
@@ -109,8 +139,6 @@
   function Plugin (el, options) {
     this.options = Object.assign(defaults, options)
     this.elems = []
-    this.date = new Date()
-    this.date.setDate(1)
     this.el = el
     this.init()
   }
@@ -148,7 +176,7 @@
       var weeks = this.options.i18n.weeks
       var week = createElement('div', 'fc-week')
       for (var i in weeks) {
-        week.appendChild(createElement('span', null, weeks[i]))
+        week.appendChild(createElement('b', null, weeks[i]))
       }
       this.body = createElement('div', 'fc-body')
       this.el.appendChild(week)
@@ -158,18 +186,19 @@
     },
 
     appendMonths: function (n) {
-      var date = this.date,
+      var date = new Date(),
           now  = new Date()
+      date.setDate(1)
       while (n--) {
         var current = date.getMonth()
         var monthEl = createElement('div', 'fc-month', date.getFullYear() + '年' + (date.getMonth() + 1) + '月')
-        var daysEl = createElement('div', 'fc-days')
+        // var daysEl = createElement('div', 'fc-days')
         this.body.appendChild(monthEl)
         while (date.getMonth() === current) {
-          appendDays(date, now, this.options, daysEl)
+          appendDays(date, now, this.options, this.body)
           date.setDate(date.getDate() + 1)
         }
-        this.body.appendChild(daysEl)
+        // this.body.appendChild(daysEl)
       }
       // while loop trips over and day is at 30/31, bring it back
       date.setDate(1)

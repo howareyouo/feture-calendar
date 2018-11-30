@@ -25,6 +25,11 @@
 .fc-month {
   padding: 1rem 0;
   text-align: center;
+  flex-basis: 100%;
+}
+.fc-body {
+  display: flex;
+  flex-wrap: wrap;
 }
 .fc-week {
   display: flex;
@@ -36,7 +41,7 @@
   z-index: 1;
   top: 0;
 }
-.fc-week span, .fc-day {
+.fc-week b, .fc-day {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -48,25 +53,27 @@
   background-color: #fff;
   text-align: center;
   font-style: normal;
+  position: relative;
   padding: 1rem 0;
+  margin: .25rem 0;
   cursor: pointer;
-}
-.fc-body, .fc-body section {
-  display: flex;
-  flex-direction: column;
-}
-.fc-days {
-  display: flex;
-  flex-wrap: wrap;
 }
 .fc-day-selected {
   background-color: #2165FF;
   border-radius: .5rem;
+  padding: 1.25rem 0;
+  margin: 0 0;
   color: #fff;
 }
 .fc-day-disabled {
   cursor: not-allowed;
   color: #B1B7BF;
+}
+.fc-day-from, .fc-day-to {
+  position: absolute;
+  font-style: normal;
+  font-size: .85rem;
+  top: 2.5rem;
 }
 .fc-range-from {
   border-bottom-right-radius: 0;
@@ -75,4 +82,7 @@
 .fc-range-to {
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
+}
+.fc-range {
+  background: #E5EEFF;
 }
