@@ -6,9 +6,7 @@
 
 ```html
 <link href="src/feture-calendar.css" rel="stylesheet">
-<div class="calendar-wrapper">
-  <div id="f-cal"></div>
-</div>
+<div id="f-cal"></div>
 ```
 
 ```html
