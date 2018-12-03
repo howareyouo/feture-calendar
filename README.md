@@ -58,4 +58,4 @@ npm run watch
 
 ### Welcome to feedback for any bugs.
 
-> This project was inspired by [Vanilla JS Calendar](https://github.com/chrisssycollins/vanilla-calendar), [@chrisssycollins](https://github.com/chrisssycollins).
+> This project was inspired by [Vanilla JS Calendar](https://github.com/chrisssycollins/vanilla-calendar) - [@chrisssycollins](https://github.com/chrisssycollins).
