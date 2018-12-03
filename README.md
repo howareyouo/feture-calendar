@@ -14,9 +14,7 @@
 <script src="src/feture-calendar.js"></script>
 <script>
 window.addEventListener('load', function () {
-  new FetureCalendar(document.getElementById('f-cal'), {
-    disablePast: true
-  })
+  new FetureCalendar(document.getElementById('f-cal'))
 })
 </script>
 ```
