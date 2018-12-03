@@ -56,8 +56,6 @@ npm install
 npm run watch
 ```
 
-### I encourage everyone to hack away at this!
-
-[在线Demo](http://antares.hao0.me)
+### Welcome to feedback for any bugs.
 
 > This project was inspired by [Vanilla JS Calendar](https://github.com/chrisssycollins/vanilla-calendar), [@chrisssycollins](https://github.com/chrisssycollins).
