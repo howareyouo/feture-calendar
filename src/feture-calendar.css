@@ -66,6 +66,8 @@
 }
 .fc-day-from, .fc-day-to {
   position: absolute;
+  display: block;
+  text-align: center;
   font-style: normal;
   font-size: .85rem;
   top: 2.5rem;
