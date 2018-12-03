@@ -1,5 +1,7 @@
 # Vanilla JS Calendar 🍦
 
+> Picking feture date
+
 #### Usage
 
 ```html
@@ -53,3 +55,7 @@ npm install
 ```bash
 npm run watch
 ```
+
+### I encourage everyone to hack away at this!
+
+> This project was inspired by (Vanilla JS Calendar)[https://github.com/chrisssycollins/vanilla-calendar], (@chrisssycollins)[https://github.com/chrisssycollins].
