@@ -3,9 +3,9 @@
 #### Usage
 
 ```html
- <div class="calendar-wrapper">
-    <div id="f-cal"></div>
-  </div>
+<div class="calendar-wrapper">
+  <div id="f-cal"></div>
+</div>
 ```
 
 ```html
