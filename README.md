@@ -1,6 +1,6 @@
 # Feture Calendar 🍦
 
-> Picking feture date.
+> Picking feture dates.
 
 #### Usage
 
@@ -58,4 +58,6 @@ npm run watch
 
 ### I encourage everyone to hack away at this!
 
-> This project was inspired by (Vanilla JS Calendar)[https://github.com/chrisssycollins/vanilla-calendar], (@chrisssycollins)[https://github.com/chrisssycollins].
+[在线Demo](http://antares.hao0.me)
+
+> This project was inspired by [Vanilla JS Calendar](https://github.com/chrisssycollins/vanilla-calendar), [@chrisssycollins](https://github.com/chrisssycollins).
