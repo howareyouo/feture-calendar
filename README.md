@@ -1,6 +1,6 @@
-# Vanilla JS Calendar 🍦
+# Feture Calendar 🍦
 
-> Picking feture date
+> Picking feture date.
 
 #### Usage
 
