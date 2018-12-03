@@ -3,39 +3,41 @@
 #### Usage
 
 ```html
-<div id="vcal">
-  <div class="vcal-header">
-    <button class="vcal-btn" data-toggle="previous">
-      <svg height="24" version="1.1" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"></path>
-      </svg>
-    </button>
-
-    <div class="vcal-header__label" data-label="month">
-      March 2017
-    </div>
-
-    <button class="vcal-btn" data-toggle="next">
-      <svg height="24" version="1.1" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"></path>
-      </svg>
-    </button>
+ <div class="calendar-wrapper">
+    <div id="f-cal"></div>
   </div>
-
-  <div class="vcal-week">
-    <span>Mon</span> <span>Tue</span><span>Wed</span> <span>Thu</span> <span>Fri</span> <span>Sat</span> <span>Sun</span>
-  </div>
-  <div class="vcal-body" data-area="month"></div>
-</div>
 ```
 
 ```html
-<script src="vanillaCalendar.js" type="text/javascript"></script>
+<script src="src/feture-calendar.js"></script>
 <script>
 window.addEventListener('load', function () {
-  vanillaCalendar.init();
+  new FetureCalendar(document.getElementById('f-cal'), {
+    disablePast: true
+  })
 })
 </script>
+```
+
+### Options
+```javascript
+var defaults = {
+  months: 3,    // initial months
+  max: 12,      // max months
+  format: 'mm月dd日',      // dateformat, supports yyyy,mm,dd
+  range: ['入住', '离店'],  // range text, if unset, select only one date
+  i18n: {
+    unit: '晚',
+    months: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+    weeks: ['日', '一', '二', '三', '四', '五', '六'],
+    today: '今天',
+    y: '年',
+    m: '月',
+    d: '日'
+  },
+  disablePast: true,
+  onSelect: console.log
+}
 ```
 
 ### Development
@@ -51,7 +53,3 @@ npm install
 ```bash
 npm run watch
 ```
-
-### I encourage everyone to hack away at this!
-
-> This isn't ready to be used in a production application out the box, it's more of a hacked together project. Fork it and make it better!
