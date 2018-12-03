@@ -7,9 +7,12 @@
   <meta content="Chrissy Collins" name="author">
   <meta content="A pure vanilla JS calendar by @chrisssycollins" name="description">
   <link href="src/feture-calendar.css" rel="stylesheet">
-  <title>Vanilla JS Calendar</title>
+  <title>Feture Calendar</title>
   <style>
     * {margin: 0; padding: 0}
+    html, body {
+      height: 100%;
+    }
     html { box-sizing: border-box; font-size: 14px; }
     body {
       -webkit-font-smoothing: antialiased;
@@ -20,7 +23,9 @@
   </style>
 </head>
 <body>
-<div id="vcal"></div>
+<div style="padding-top: 5rem; height: 30rem">
+  <div id="vcal"></div>
+</div>
 <script src="src/feture-calendar.js"></script>
 <script>
 window.addEventListener('load', function () {

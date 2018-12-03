@@ -1,3 +1,8 @@
+/*
+ * feture-calendar
+ * author: backflow
+ * email: hunan_me@163.com
+ */
 (function (root, factory) {
   var pluginName = 'FetureCalendar'
   if (typeof define === 'function' && define.amd) {
@@ -11,21 +16,26 @@
   'use strict'
 
   var defaults = {
-    months: 2,
+    months: 3,
+    format: 'mm月dd日',
     range: ['入住', '离店'],
-    unit: '晚',
     i18n: {
+      unit: '晚',
       months: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
       weeks: ['日', '一', '二', '三', '四', '五', '六'],
-      today: '今天'
+      today: '今天',
+      y: '年',
+      m: '月',
+      d: '日'
     },
     onSelect: function (date) {
+      console.log(date)
     }
   }
 
-  /**
-   * Private Helper Functions
-   */
+  //
+  //  Private Helper Functions
+  //
   function createElement (tag, clazz, html) {
     var el = document.createElement(tag)
     if (clazz) {
@@ -75,8 +85,8 @@
     return container
   }
 
-  function removeActiveClass (el) {
-    el.querySelectorAll('.fc-day-selected').forEach(function (e) {
+  function removeActiveClass () {
+    document.querySelectorAll('.fc-day-selected').forEach(function (e) {
       e.classList.remove('fc-day-selected')
       e.classList.remove('fc-range-from')
       e.classList.remove('fc-range-to')
@@ -97,10 +107,25 @@
     var next = elems[0].nextElementSibling
     while (next != null && next != elems[1]) {
       if (!next.classList.contains('fc-month')) {
-        next.classList.toggle('fc-range')
+        next.classList.toggle(clazz)
       }
       next = next.nextElementSibling
     }
+  }
+
+  function pad (s, n, c) {
+    return Array((n || 2) - String(s).length + 1).join(c || '0') + s
+  }
+
+  function format (time, options) {
+    var date = new Date(time)
+    var val = options.format.replace(/yyyy/ig, date.getFullYear())
+    val = val.replace(/yy/ig, String(date.getFullYear()).substring(2, 4))
+    val = val.replace(/mm/ig, pad(date.getMonth() + 1))
+    val = val.replace(/m/ig, date.getMonth() + 1)
+    val = val.replace(/dd/ig, pad(date.getDate()))
+    val = val.replace(/d/ig, date.getDate())
+    return val
   }
 
   function rangeSelect (tar, range, elems, ctx) {
@@ -108,11 +133,16 @@
       toggleRangeClass(elems, 'fc-range')
       elems.forEach(function (e) {
         e.removeChild(e.querySelector('i'))
+        e.classList.remove('fc-tip')
         e.classList.remove('fc-day-selected')
         e.classList.remove('fc-range-from')
         e.classList.remove('fc-range-to')
+        e.title = ''
       })
       elems.length = 0
+    }
+    if (elems.includes(tar)) {
+      return
     }
     elems.push(tar)
     tar.classList.add('fc-day-selected')
@@ -123,14 +153,18 @@
       setRangeText(elems[0], range[0], true)
       setRangeText(elems[1], range[1])
       toggleRangeClass(elems, 'fc-range')
+      var days = (elems[1].time - elems[0].time) / 1000 / 60 / 60 / 24
+      tar.title = days + ctx.options.i18n.unit
+      tar.classList.add('fc-tip')
       elems[1].classList.add('fc-range-to')
       elems[0].classList.add('fc-range-from')
       elems[1].classList.add('fc-range-to')
+      return true
     }
   }
 
   function singleSelect (tar, elems, ctx) {
-    removeActiveClass(ctx)
+    removeActiveClass(ctx.el)
     tar.classList.add('fc-day-selected')
     elems.length = 0
     elems.push(tar)
@@ -155,23 +189,27 @@
     if (tar.classList.contains('fc-day-disabled')) {
       return
     }
-
-    var date = new Date(tar.time)
-    this.options.onSelect(date)
-
     var range = this.options.range,
         elems = this.elems
-
     if (range && range.length == 2) {
-      rangeSelect(tar, range, elems, this.el)
+      if (rangeSelect(tar, range, elems, this)) {
+        this.options.onSelect([
+          format(elems[0].time, this.options),
+          format(elems[1].time, this.options)
+        ])
+      }
     } else {
-      singleSelect(tar, elems, this.el)
+      singleSelect(tar, elems, this)
+      this.options.onSelect(format(tar.time, this.options))
     }
   }
 
   Plugin.prototype = {
 
     init: function () {
+      if (this.el.fc) {
+        return
+      }
       this.el.classList.add('fc')
       var weeks = this.options.i18n.weeks
       var week = createElement('div', 'fc-week')
@@ -182,16 +220,18 @@
       this.el.appendChild(week)
       this.el.appendChild(this.body)
       this.appendMonths(this.options.months)
-      this.attachListeners()
+      this.body.addEventListener('click', clickHandler.bind(this))
+      this.el.fc = this
     },
 
     appendMonths: function (n) {
-      var date = new Date(),
+      var i18n = this.options.i18n,
+          date = new Date(),
           now  = new Date()
       date.setDate(1)
       while (n--) {
         var current = date.getMonth()
-        var monthEl = createElement('div', 'fc-month', date.getFullYear() + '年' + (date.getMonth() + 1) + '月')
+        var monthEl = createElement('div', 'fc-month', date.getFullYear() + i18n.y + (date.getMonth() + 1) + i18n.m)
         // var daysEl = createElement('div', 'fc-days')
         this.body.appendChild(monthEl)
         while (date.getMonth() === current) {
@@ -205,8 +245,8 @@
       date.setMonth(date.getMonth() - 1)
     },
 
-    attachListeners: function () {
-      this.body.addEventListener('click', clickHandler.bind(this))
+    select: function (dates) {
+
     },
 
     destroy: function () {
