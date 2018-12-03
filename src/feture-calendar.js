@@ -17,6 +17,7 @@
 
   var defaults = {
     months: 3,
+    max: 12,
     format: 'mm月dd日',
     range: ['入住', '离店'],
     i18n: {
@@ -28,13 +29,12 @@
       m: '月',
       d: '日'
     },
-    onSelect: function (date) {
-      console.log(date)
-    }
+    disablePast: true,
+    onSelect: console.log
   }
 
   //
-  //  Private Helper Functions
+  //  private helper functions
   //
   function createElement (tag, clazz, html) {
     var el = document.createElement(tag)
@@ -113,25 +113,10 @@
     }
   }
 
-  function pad (s, n, c) {
-    return Array((n || 2) - String(s).length + 1).join(c || '0') + s
-  }
-
-  function format (time, options) {
-    var date = new Date(time)
-    var val = options.format.replace(/yyyy/ig, date.getFullYear())
-    val = val.replace(/yy/ig, String(date.getFullYear()).substring(2, 4))
-    val = val.replace(/mm/ig, pad(date.getMonth() + 1))
-    val = val.replace(/m/ig, date.getMonth() + 1)
-    val = val.replace(/dd/ig, pad(date.getDate()))
-    val = val.replace(/d/ig, date.getDate())
-    return val
-  }
-
-  function rangeSelect (tar, range, elems, ctx) {
-    if (elems.length >= 2) {
-      toggleRangeClass(elems, 'fc-range')
-      elems.forEach(function (e) {
+  function rangeSelect (el, selected, range, ctx) {
+    if (selected.length >= 2) {
+      toggleRangeClass(selected, 'fc-range')
+      selected.forEach(function (e) {
         e.removeChild(e.querySelector('i'))
         e.classList.remove('fc-tip')
         e.classList.remove('fc-day-selected')
@@ -139,118 +124,159 @@
         e.classList.remove('fc-range-to')
         e.title = ''
       })
-      elems.length = 0
+      selected.length = 0
     }
-    if (elems.includes(tar)) {
+    if (selected.includes(el)) {
       return
     }
-    elems.push(tar)
-    tar.classList.add('fc-day-selected')
-    if (elems.length == 1) {
-      setRangeText(tar, range[0], true)
+    selected.push(el)
+    el.classList.add('fc-day-selected')
+    if (selected.length == 1) {
+      setRangeText(el, range[0], true)
     } else {
-      elems.sort(function (a, b) { return a.time - b.time })
-      setRangeText(elems[0], range[0], true)
-      setRangeText(elems[1], range[1])
-      toggleRangeClass(elems, 'fc-range')
-      var days = (elems[1].time - elems[0].time) / 1000 / 60 / 60 / 24
-      tar.title = days + ctx.options.i18n.unit
-      tar.classList.add('fc-tip')
-      elems[1].classList.add('fc-range-to')
-      elems[0].classList.add('fc-range-from')
-      elems[1].classList.add('fc-range-to')
+      selected.sort(function (a, b) { return a.time - b.time })
+      setRangeText(selected[0], range[0], true)
+      setRangeText(selected[1], range[1])
+      toggleRangeClass(selected, 'fc-range')
+      var days = (selected[1].time - selected[0].time) / 1000 / 60 / 60 / 24
+      el.title = days + ctx.options.i18n.unit
+      el.classList.add('fc-tip')
+      selected[0].classList.add('fc-range-from')
+      selected[1].classList.add('fc-range-to')
       return true
     }
   }
 
-  function singleSelect (tar, elems, ctx) {
+  function singleSelect (el, selected, ctx) {
     removeActiveClass(ctx.el)
-    tar.classList.add('fc-day-selected')
-    elems.length = 0
-    elems.push(tar)
+    el.classList.add('fc-day-selected')
+    selected.length = 0
+    selected.push(el)
   }
 
+  function pad (s, n, c) {
+    return Array((n || 2) - String(s).length + 1).join(c || '0') + s
+  }
+
+  function format (time, options) {
+    var date = new Date(time)
+    return options.format.replace(/yyyy/ig, date.getFullYear())
+      .replace(/yy/ig, String(date.getFullYear()).substring(2, 4))
+      .replace(/mm/ig, pad(date.getMonth() + 1))
+      .replace(/m/ig, date.getMonth() + 1)
+      .replace(/dd/ig, pad(date.getDate()))
+      .replace(/d/ig, date.getDate())
+  }
+
+  function days_between (from, to) {
+    // The number of milliseconds in one day
+    var unit_day = 1000 * 60 * 60 * 24
+
+    // Calculate the difference in milliseconds
+    var distance = Math.abs(from - to)
+
+    // Convert back to days and return
+    return Math.round(distance / unit_day)
+  }
+
+  var clickHandler = function (evt) {
+    var el = evt.target, tag = el.tagName
+    if (tag != 'EM' && tag != 'B') return
+    if (tag == 'B') el = el.parentNode
+    if (el.classList.contains('fc-day-disabled')) return
+    var selected = this.selected,
+        options  = this.options,
+        range    = options.range
+
+    var rs = range && range.length == 2
+    rs ?
+      rangeSelect(el, selected, range, this) :
+      singleSelect(el, selected, this)
+    var dates = selected.map(function (el) {
+      return format(el.time, options)
+    })
+    if (dates.length == 2) {
+      dates.push(days_between(selected[0].time, selected[1].time))
+    }
+    this.options.onSelect(dates)
+    this.dates = dates
+  }
+
+  var scrollHandler = function (e) {
+    var el = e.target
+    // element is at the end of its scroll, load more content
+    if (el.scrollHeight - el.scrollTop === el.clientHeight) {
+      this.append(1)
+    }
+  }
+
+  //
+  //  Plugin definition
+  //
   function Plugin (el, options) {
+    if (el.fc) {
+      return
+    }
     this.options = Object.assign(defaults, options)
-    this.elems = []
+    this.selected = []      // selected dates
+    this.months = 0         // total months
+    this.date = new Date()  // current date
     this.el = el
-    this.init()
-  }
+    el.classList.add('fc')
 
-  var clickHandler = function (e) {
-    var tar = e.target,
-        tag = tar.tagName
-    if (tag != 'EM' && tag != 'B') {
-      return
-    }
-    if (tag == 'B') {
-      tar = tar.parentNode
-    }
-    if (tar.classList.contains('fc-day-disabled')) {
-      return
-    }
-    var range = this.options.range,
-        elems = this.elems
-    if (range && range.length == 2) {
-      if (rangeSelect(tar, range, elems, this)) {
-        this.options.onSelect([
-          format(elems[0].time, this.options),
-          format(elems[1].time, this.options)
-        ])
-      }
-    } else {
-      singleSelect(tar, elems, this)
-      this.options.onSelect(format(tar.time, this.options))
-    }
+    // week header
+    var week = createElement('div', 'fc-week')
+    this.options.i18n.weeks.forEach(function (e) {
+      week.appendChild(createElement('b', null, e))
+    })
+    el.appendChild(week)
+
+    // main body
+    this.body = createElement('div', 'fc-body')
+    this.append(this.options.months)
+    this.body.addEventListener('click', clickHandler.bind(this))
+    this.body.addEventListener('scroll', scrollHandler.bind(this))
+    el.appendChild(this.body)
+    el.fc = this
   }
 
   Plugin.prototype = {
-
-    init: function () {
-      if (this.el.fc) {
-        return
-      }
-      this.el.classList.add('fc')
-      var weeks = this.options.i18n.weeks
-      var week = createElement('div', 'fc-week')
-      for (var i in weeks) {
-        week.appendChild(createElement('b', null, weeks[i]))
-      }
-      this.body = createElement('div', 'fc-body')
-      this.el.appendChild(week)
-      this.el.appendChild(this.body)
-      this.appendMonths(this.options.months)
-      this.body.addEventListener('click', clickHandler.bind(this))
-      this.el.fc = this
-    },
-
-    appendMonths: function (n) {
+    append: function (n) {
       var i18n = this.options.i18n,
-          date = new Date(),
+          date = this.date,
           now  = new Date()
+
       date.setDate(1)
       while (n--) {
+        if (this.months + 1 > this.options.max) {
+          return
+        }
         var current = date.getMonth()
         var monthEl = createElement('div', 'fc-month', date.getFullYear() + i18n.y + (date.getMonth() + 1) + i18n.m)
-        // var daysEl = createElement('div', 'fc-days')
         this.body.appendChild(monthEl)
         while (date.getMonth() === current) {
           appendDays(date, now, this.options, this.body)
           date.setDate(date.getDate() + 1)
         }
-        // this.body.appendChild(daysEl)
+        this.months++
       }
-      // while loop trips over and day is at 30/31, bring it back
-      date.setDate(1)
-      date.setMonth(date.getMonth() - 1)
     },
 
     select: function (dates) {
 
-    },
+      // getter
+      if (!dates) {
+        return this.dates
+      }
 
-    destroy: function () {
-      // Remove any event listeners and undo any "init" actions here...
+      // range of dates
+      if (Array.isArray(dates)) {
+
+      }
+      // single date
+      else {
+
+      }
     }
   }
 

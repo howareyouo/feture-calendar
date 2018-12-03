@@ -5,6 +5,7 @@
   background-color: #fff;
   position: relative;
   display: block;
+  flex-grow: 1;
   height: 100%;
   width: 100%;
 }
@@ -13,8 +14,8 @@
   flex-wrap: wrap;
   margin-top: 2.5rem;
   height: calc(100% - 2.5rem);
+  overflow-y: scroll;
   position: absolute;
-  overflow: scroll;
   bottom: 0;
   right: 0;
   left: 0;
