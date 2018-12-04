@@ -1,5 +1,5 @@
 {
-  "name": "vanilla-calendar",
+  "name": "feture-calendar",
   "version": "0.0.3",
   "description": "A simple, hackable vanilla JS calendar",
   "main": "src/fetureCalendar.js",
@@ -8,19 +8,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://chrisssycollins@github.com/chrisssycollins/vanilla-calendar.git"
+    "url": "git+https://howareyouo@github.com/howareyouo/feture-calendar.git"
   },
   "keywords": [
     "vanilla",
     "calendar",
     "javascript"
   ],
-  "author": "Chrissy Collins",
+  "author": "Backflow",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/chrisssycollins/vanilla-calendar/issues"
+    "url": "https://github.com/howareyouo/feture-calendar/issues"
   },
-  "homepage": "https://github.com/chrisssycollins/vanilla-calendar#readme",
+  "homepage": "https://github.com/howareyouo/feture-calendar#readme",
   "devDependencies": {
     "cssnano": "^3.10.0",
     "gulp": "^3.9.1",
