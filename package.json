@@ -2,7 +2,7 @@
   "name": "feture-calendar",
   "version": "0.0.3",
   "description": "A simple, hackable vanilla JS calendar",
-  "main": "src/fetureCalendar.js",
+  "main": "src/feture-calendar.js",
   "scripts": {
     "watch": "gulp watch"
   },
