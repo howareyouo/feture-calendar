@@ -85,8 +85,8 @@
     return container
   }
 
-  function removeActiveClass () {
-    document.querySelectorAll('.fc-day-selected').forEach(function (e) {
+  function removeActiveClass (el) {
+    el.querySelectorAll('.fc-day-selected').forEach(function (e) {
       e.classList.remove('fc-day-selected')
       e.classList.remove('fc-range-from')
       e.classList.remove('fc-range-to')
@@ -160,6 +160,16 @@
 
   function format (time, options) {
     var date = new Date(time)
+    return options.format.replace(/yyyy/ig, date.getFullYear())
+      .replace(/yy/ig, String(date.getFullYear()).substring(2, 4))
+      .replace(/mm/ig, pad(date.getMonth() + 1))
+      .replace(/m/ig, date.getMonth() + 1)
+      .replace(/dd/ig, pad(date.getDate()))
+      .replace(/d/ig, date.getDate())
+  }
+
+  function parse (source, options) {
+    var date = new Date(source)
     return options.format.replace(/yyyy/ig, date.getFullYear())
       .replace(/yy/ig, String(date.getFullYear()).substring(2, 4))
       .replace(/mm/ig, pad(date.getMonth() + 1))
@@ -271,6 +281,7 @@
 
       // range of dates
       if (Array.isArray(dates)) {
+        removeActiveClass(this.el)
 
       }
       // single date
