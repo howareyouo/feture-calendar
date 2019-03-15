@@ -2,6 +2,9 @@
 
 > Picking feture dates.
 
+#### Screenshot
+![截图](https://images.gitee.com/uploads/images/2019/0315/095500_358dedc2_10015.png "屏幕截图.png")
+
 #### Usage
 
 ```html
