@@ -16,12 +16,12 @@
 <script src="src/feture-calendar.js"></script>
 <script>
 window.addEventListener('load', function () {
-  new FetureCalendar(document.getElementById('f-cal'))
+  new FetureCalendar(document.getElementById('f-cal'), options)
 })
 </script>
 ```
 
-### Options
+### Default Options
 ```javascript
 var defaults = {
   months: 3,    // initial months
