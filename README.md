@@ -2,10 +2,13 @@
 
 > Picking feture dates.
 
-#### Screenshot
+## Demo
+__[Click me!](https://howareyouo.github.io/feture-calendar)__
+
+## Screenshot
 ![截图](https://images.gitee.com/uploads/images/2019/0315/095500_358dedc2_10015.png "屏幕截图.png")
 
-#### Usage
+## Usage
 
 ```html
 <link href="src/feture-calendar.css" rel="stylesheet">
@@ -21,7 +24,7 @@ window.addEventListener('load', function () {
 </script>
 ```
 
-### Default Options
+## Default Options
 ```javascript
 var defaults = {
   months: 3,    // initial months
